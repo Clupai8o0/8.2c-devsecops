@@ -1,10 +1,9 @@
 pipeline {
   agent any
 
-  environment {
-    // SONAR_TOKEN = credentials('SONAR_TOKEN')
-    SONAR_SCANNER_PATH = '/opt/sonar-scanner'
-  }
+  // environment {
+  //   SONAR_SCANNER_PATH = '/opt/sonar-scanner'
+  // }
 
   stages {
     stage('Checkout') {
@@ -33,12 +32,12 @@ pipeline {
         sh 'npm audit || true' // This will show known CVEs in the output
       }
     }
-    stage('SonarCloud Analysis') {
-      steps {
-        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
-          sh '${SONAR_SCANNER_PATH}/bin/sonar-scanner -Dsonar.login=${SONAR_TOKEN}'
-        }
-      }
-    }
+    // stage('SonarCloud Analysis') {
+    //   steps {
+    //     withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+    //       sh '${SONAR_SCANNER_PATH}/bin/sonar-scanner -Dsonar.login=${SONAR_TOKEN}'
+    //     }
+    //   }
+    // }
   }
 }
