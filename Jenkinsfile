@@ -1,6 +1,10 @@
 pipeline {
   agent any
 
+  environment {
+    SONAR_TOKEN = credentials('SONAR_TOKEN')
+  }
+
   stages {
     stage('Checkout') {
       steps {
@@ -17,7 +21,7 @@ pipeline {
         sh 'npm test || true' // allows pipeline to continue despite test failures
       }
     }
-    stage('Generate Coverae Report') {
+    stage('Generate Coverage Report') {
       steps {
         // Ensure coverage report exists
         sh 'npm run coverage || true'
@@ -26,6 +30,11 @@ pipeline {
     stage('NPM Audit (Security Scan)') {
       steps {
         sh 'npm audit || true' // This will show known CVEs in the output
+      }
+    }
+    stage('SonarCloud Analysis') {
+      steps {
+        sh 'sonar-scanner -Dsonar.login=$SONAR_TOKEN'
       }
     }
   }
