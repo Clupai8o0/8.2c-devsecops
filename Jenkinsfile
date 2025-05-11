@@ -2,7 +2,8 @@ pipeline {
   agent any
 
   environment {
-    SONAR_TOKEN = credentials('SONAR_TOKEN')
+    // SONAR_TOKEN = credentials('SONAR_TOKEN')
+    SONAR_SCANNER_PATH = '/opt/sonar-scanner'
   }
 
   stages {
@@ -34,7 +35,9 @@ pipeline {
     }
     stage('SonarCloud Analysis') {
       steps {
-        sh 'sonar-scanner -Dsonar.login=$SONAR_TOKEN'
+        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+          sh '${SONAR_SCANNER_PATH}/bin/sonar-scanner -Dsonar.login=${SONAR_TOKEN}'
+        }
       }
     }
   }
